@@ -3,8 +3,9 @@ package com.sumanth.bookstore.controller;
 import com.sumanth.bookstore.entity.Book;
 import com.sumanth.bookstore.service.BooksService;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,23 +22,25 @@ public class BooksController {
   private BooksService booksService;
 
   @PostMapping
-  public void addBook(@RequestBody Book book) {
+  public ResponseEntity<String> addBook(@RequestBody Book book) {
     booksService.addNewBookToInventory(book);
+    return new ResponseEntity<>("Added Book to Inventory", HttpStatus.CREATED);
   }
 
   @GetMapping
-  public List<Book> fetchBooks() {
-    return new ArrayList<>();
+  public ResponseEntity<ArrayList<Object>> fetchBooks() {
+    return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
   }
 
   @GetMapping("/{book}")
-  public Book fetchBookByName(@PathVariable String book) {
-    return new Book();
+  public ResponseEntity<Book> fetchBookByName(@PathVariable String book) {
+    return new ResponseEntity<>(new Book(), HttpStatus.OK);
+
   }
 
   @DeleteMapping("/deleteBook/{id}")
-  public void deleteBook(@PathVariable Integer id) {
-
+  public ResponseEntity<String> deleteBook(@PathVariable Integer id) {
+    return new ResponseEntity<>("Deleted book from inventory", HttpStatus.OK);
   }
 
 }

@@ -3,6 +3,8 @@ package com.sumanth.bookstore.controller;
 import com.sumanth.bookstore.entity.User;
 import com.sumanth.bookstore.service.BasicAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,14 +20,14 @@ public class BasicAuthController {
   private BasicAuthService basicAuthService;
 
   @PostMapping("/signup")
-  public String register(@RequestBody User user) {
+  public ResponseEntity<String> register(@RequestBody User user) {
     basicAuthService.registerUser(user);
-    return "User signed up!";
+    return new ResponseEntity<>("User signed up!", HttpStatus.CREATED);
   }
 
   @DeleteMapping("/deleteUser/{username}")
-  public String deleteUser(@PathVariable String username) {
+  public ResponseEntity<String> deleteUser(@PathVariable String username) {
     basicAuthService.deleteUser(username);
-    return "User deleted!";
+    return new ResponseEntity<>("User deleted!", HttpStatus.OK);
   }
 }

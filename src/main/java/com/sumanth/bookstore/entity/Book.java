@@ -1,5 +1,7 @@
 package com.sumanth.bookstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,10 +22,26 @@ public class Book {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String title;
+
+  @Column(nullable = false)
   private BigDecimal price;
+
+  @JsonProperty("release_date")
+  @Column(name = "release_date", nullable = false)
   private LocalDate releaseDate;
+
+  @Column(nullable = false)
   private Integer quantity;
+
+  @ManyToOne
+  @JoinColumn(name = "author_id")
+  private Author author;
+
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 
   public Author getAuthor() {
     return author;
@@ -80,14 +98,6 @@ public class Book {
   public void setTitle(String title) {
     this.title = title;
   }
-
-  @ManyToOne
-  @JoinColumn(name = "author_id")
-  private Author author;
-
-  @ManyToOne
-  @JoinColumn(name = "category_id")
-  private Category category;
 
 }
 
