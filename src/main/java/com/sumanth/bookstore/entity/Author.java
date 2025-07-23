@@ -22,7 +22,7 @@ public class Author {
   private String name;
 
   @OneToMany(mappedBy = "author")
-  @JsonIgnore
+  @JsonIgnore // circular reference avoidance
   private List<Book> books;
 
   public List<Book> getBooks() {

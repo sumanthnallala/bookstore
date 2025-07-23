@@ -23,7 +23,7 @@ public class Category {
   private String name;
 
   @OneToMany(mappedBy = "category")
-  @JsonIgnore
+  @JsonIgnore // circular reference avoidance
   private List<Book> books;
 
   public List<Book> getBooks() {
