@@ -31,31 +31,43 @@ public class BooksServiceImpl implements BooksService {
   public void addNewBookToInventory(Book book) {
     Author author = authorRepository.findByName(book.getAuthor().getName());
     if (author == null) {
-      Author author1 = new Author();
-      author1.setName(book.getAuthor().getName());
-      authorRepository.save(author1);
+      author = new Author();
+      author.setName(book.getAuthor().getName());
+      authorRepository.save(author);
     }
+    book.setAuthor(author);
 
     Category category = categoryRepository.findByName(book.getCategory().getName());
     if (category == null) {
-      Category category1 = new Category();
-      category1.setName(book.getCategory().getName());
-      categoryRepository.save(category1);
+      category = new Category();
+      category.setName(book.getCategory().getName());
+      categoryRepository.save(category);
     }
+    book.setCategory(category);
 
     validateBook(book);
-    Book savedBook = bookRepository.save(book);
+    bookRepository.save(book);
     logger.info(String.valueOf(book));
   }
 
   @Override
-  public void deleteBook(String book) {
-    Book bookToDelete = bookRepository.findByTitle(book);
+  public Book fetchBookByTitle(String title) {
+    Book foundBook = bookRepository.findByTitle(title);
+    if (foundBook == null) {
+      logger.warn("Book not found: " + title);
+      return null;
+    }
+    return foundBook;
+  }
+
+  @Override
+  public void deleteBookByTitle(String title) {
+    Book bookToDelete = bookRepository.findByTitle(title);
     if (bookToDelete != null) {
       bookRepository.delete(bookToDelete);
-      logger.info("Deleted book: " + book);
+      logger.info("Deleted book: " + title);
     } else {
-      logger.warn("Book not found: " + book);
+      logger.warn("Book not found: " + title);
     }
   }
 
@@ -63,7 +75,7 @@ public class BooksServiceImpl implements BooksService {
   public void deleteAuthor(String name) {
     Author author = authorRepository.findByName(name);
     if (author != null) {
-      authorRepository.deleteByName(name);
+      authorRepository.deleteById(author.getId());
       logger.info("Deleted author: " + name);
     } else {
       logger.warn("Author not found: " + name);
@@ -74,14 +86,14 @@ public class BooksServiceImpl implements BooksService {
   public void deleteCategory(String name) {
     Category category = categoryRepository.findByName(name);
     if (category != null) {
-      categoryRepository.deleteByName(name);
+      categoryRepository.deleteById(category.getId());
       logger.info("Deleted category: " + name);
     } else {
       logger.warn("Category not found: " + name);
     }
   }
 
-  public List<Book> fetchBooks() {
+  public List<Book> fetchAllBooks() {
     List<Book> books = bookRepository.findAll();
     return books;
   }

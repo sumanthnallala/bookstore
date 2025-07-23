@@ -1,5 +1,6 @@
 package com.sumanth.bookstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,9 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
-import lombok.Data;
 
-@Data
 @Table(name = "authors")
 @Entity
 public class Author {
@@ -21,6 +20,10 @@ public class Author {
 
   @Column(nullable = false, unique = true)
   private String name;
+
+  @OneToMany(mappedBy = "author")
+  @JsonIgnore
+  private List<Book> books;
 
   public List<Book> getBooks() {
     return books;
@@ -45,8 +48,5 @@ public class Author {
   public void setName(String name) {
     this.name = name;
   }
-
-  @OneToMany(mappedBy = "author")
-  private List<Book> books;
 }
 

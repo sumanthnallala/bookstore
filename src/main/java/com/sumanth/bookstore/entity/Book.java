@@ -11,9 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import lombok.Data;
 
-@Data
 @Table(name = "books")
 @Entity
 public class Book {

@@ -2,7 +2,7 @@ package com.sumanth.bookstore.controller;
 
 import com.sumanth.bookstore.entity.Book;
 import com.sumanth.bookstore.service.BooksService;
-import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +28,19 @@ public class BooksController {
   }
 
   @GetMapping
-  public ResponseEntity<ArrayList<Object>> fetchBooks() {
-    return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+  public ResponseEntity<List<Book>> fetchAllBooks() {
+    List<Book> books = booksService.fetchAllBooks();
+    return new ResponseEntity<>(books, HttpStatus.OK);
   }
 
-  @GetMapping("/{book}")
-  public ResponseEntity<Book> fetchBookByName(@PathVariable String book) {
-    return new ResponseEntity<>(new Book(), HttpStatus.OK);
+  @GetMapping("/{title}")
+  public ResponseEntity<Book> fetchBookByTitle(@PathVariable String title) {
+    return new ResponseEntity<>(booksService.fetchBookByTitle(title), HttpStatus.OK);
   }
 
-  @DeleteMapping("/deleteBook/{book}")
-  public ResponseEntity<String> deleteBook(@PathVariable String book) {
+  @DeleteMapping("/deleteBook/{title}")
+  public ResponseEntity<String> deleteBookByTitle(@PathVariable String title) {
+    booksService.deleteBookByTitle(title);
     return new ResponseEntity<>("Deleted book from inventory", HttpStatus.OK);
   }
 
@@ -50,8 +52,12 @@ public class BooksController {
 
   @DeleteMapping("/deleteCategory/{name}")
   public ResponseEntity<String> deleteCategory(@PathVariable String name) {
-    booksService.deleteCategory(name);
-    return new ResponseEntity<>("Deleted category from inventory", HttpStatus.OK);
+    try {
+      booksService.deleteCategory(name);
+      return new ResponseEntity<>("Deleted category from inventory", HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
   }
 
 }
