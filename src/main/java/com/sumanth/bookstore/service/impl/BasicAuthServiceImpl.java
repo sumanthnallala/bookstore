@@ -26,4 +26,12 @@ public class BasicAuthServiceImpl implements BasicAuthService {
   public void loginUser(String username, String password) {
 //    authRepository.findBy(username);
   }
+
+  @Override
+  public void deleteUser(String username) {
+    User user = authRepository.findByUsername(username);
+    if (user != null) {
+      authRepository.delete(user);
+    }
+  }
 }

@@ -7,4 +7,6 @@ public interface BasicAuthService {
   void registerUser(User user);
 
   void loginUser(String username, String password);
+
+  void deleteUser(String username);
 }
