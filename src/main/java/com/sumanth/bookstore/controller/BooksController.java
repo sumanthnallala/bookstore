@@ -35,12 +35,23 @@ public class BooksController {
   @GetMapping("/{book}")
   public ResponseEntity<Book> fetchBookByName(@PathVariable String book) {
     return new ResponseEntity<>(new Book(), HttpStatus.OK);
-
   }
 
-  @DeleteMapping("/deleteBook/{id}")
-  public ResponseEntity<String> deleteBook(@PathVariable Integer id) {
+  @DeleteMapping("/deleteBook/{book}")
+  public ResponseEntity<String> deleteBook(@PathVariable String book) {
     return new ResponseEntity<>("Deleted book from inventory", HttpStatus.OK);
+  }
+
+  @DeleteMapping("/deleteAuthor/{name}")
+  public ResponseEntity<String> deleteAuthor(@PathVariable String name) {
+    booksService.deleteAuthor(name);
+    return new ResponseEntity<>("Deleted author from inventory", HttpStatus.OK);
+  }
+
+  @DeleteMapping("/deleteCategory/{name}")
+  public ResponseEntity<String> deleteCategory(@PathVariable String name) {
+    booksService.deleteCategory(name);
+    return new ResponseEntity<>("Deleted category from inventory", HttpStatus.OK);
   }
 
 }

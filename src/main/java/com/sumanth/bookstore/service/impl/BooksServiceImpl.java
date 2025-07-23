@@ -29,17 +29,56 @@ public class BooksServiceImpl implements BooksService {
   private CategoryRepository categoryRepository;
 
   public void addNewBookToInventory(Book book) {
-    Author author = new Author();
-    author.setName(book.getAuthor().getName());
-    authorRepository.save(author);
+    Author author = authorRepository.findByName(book.getAuthor().getName());
+    if (author == null) {
+      Author author1 = new Author();
+      author1.setName(book.getAuthor().getName());
+      authorRepository.save(author1);
+    }
 
-    Category category = new Category();
-    category.setName(book.getCategory().getName());
-    categoryRepository.save(category);
+    Category category = categoryRepository.findByName(book.getCategory().getName());
+    if (category == null) {
+      Category category1 = new Category();
+      category1.setName(book.getCategory().getName());
+      categoryRepository.save(category1);
+    }
 
     validateBook(book);
     Book savedBook = bookRepository.save(book);
     logger.info(String.valueOf(book));
+  }
+
+  @Override
+  public void deleteBook(String book) {
+    Book bookToDelete = bookRepository.findByTitle(book);
+    if (bookToDelete != null) {
+      bookRepository.delete(bookToDelete);
+      logger.info("Deleted book: " + book);
+    } else {
+      logger.warn("Book not found: " + book);
+    }
+  }
+
+  @Override
+  public void deleteAuthor(String name) {
+    Author author = authorRepository.findByName(name);
+    if (author != null) {
+      authorRepository.deleteByName(name);
+      logger.info("Deleted author: " + name);
+    } else {
+      logger.warn("Author not found: " + name);
+    }
+  }
+
+  @Override
+  public void deleteCategory(String name) {
+    Category category = categoryRepository.findByName(name);
+    if (category != null) {
+      categoryRepository.deleteByName(name);
+      logger.info("Deleted category: " + name);
+    } else {
+      logger.warn("Category not found: " + name);
+    }
   }
 
   public List<Book> fetchBooks() {
