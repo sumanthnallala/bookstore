@@ -7,12 +7,15 @@ import com.sumanth.bookstore.repository.AuthorRepository;
 import com.sumanth.bookstore.repository.BooksRepository;
 import com.sumanth.bookstore.repository.CategoryRepository;
 import com.sumanth.bookstore.service.BooksService;
+import com.sumanth.bookstore.service.S3Service;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BooksServiceImpl implements BooksService {
@@ -28,7 +31,11 @@ public class BooksServiceImpl implements BooksService {
   @Autowired
   private CategoryRepository categoryRepository;
 
-  public void addNewBookToInventory(Book book) {
+  @Autowired
+  private S3Service s3Service;
+
+  public void addNewBookToInventory(Book book, MultipartFile file) throws IOException {
+    String s3Key = s3Service.uploadFile(file);
     Author author = authorRepository.findByName(book.getAuthor().getName());
     if (author == null) {
       author = new Author();
@@ -46,6 +53,7 @@ public class BooksServiceImpl implements BooksService {
     book.setCategory(category);
 
     validateBook(book);
+    book.setS3Key(s3Key);
     bookRepository.save(book);
     logger.info(String.valueOf(book));
   }

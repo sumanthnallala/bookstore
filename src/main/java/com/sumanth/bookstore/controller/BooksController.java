@@ -2,6 +2,7 @@ package com.sumanth.bookstore.controller;
 
 import com.sumanth.bookstore.entity.Book;
 import com.sumanth.bookstore.service.BooksService;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/books")
@@ -21,9 +23,10 @@ public class BooksController {
   @Autowired
   private BooksService booksService;
 
-  @PostMapping
-  public ResponseEntity<String> addBook(@RequestBody Book book) {
-    booksService.addNewBookToInventory(book);
+  @PostMapping(consumes = "multipart/form-data")
+  public ResponseEntity<String> addBook(@RequestPart("data") Book book,
+      @RequestPart("file") MultipartFile file) throws IOException {
+    booksService.addNewBookToInventory(book, file);
     return new ResponseEntity<>("Added Book to Inventory", HttpStatus.CREATED);
   }
 

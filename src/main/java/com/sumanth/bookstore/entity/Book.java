@@ -33,6 +33,18 @@ public class Book {
   @Column(nullable = false)
   private Integer quantity;
 
+  public String getS3Key() {
+    return s3Key;
+  }
+
+  public void setS3Key(String s3Key) {
+    this.s3Key = s3Key;
+  }
+
+  @JsonProperty("s3_key")
+  @Column(name = "s3_key", nullable = false, unique = true)
+  private String s3Key;
+
   @ManyToOne
   @JoinColumn(name = "author_id")
   private Author author;
